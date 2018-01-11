@@ -1,0 +1,13 @@
+You can run the project by executing th "objectRecognition.py" file from the terminal by typing 
+python objectRecognition.py
+or
+python2 objectRecognition.py
+
+The images used for evaluation are there in the EvaluationData folder
+
+To test different images one has to change the folder name in the main function of the python file
+
+The outputs are stored in the file "Outputs_From_Code"
+
+The created database is in the name of DataBase
+
