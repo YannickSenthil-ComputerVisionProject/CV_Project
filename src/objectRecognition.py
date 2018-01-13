@@ -309,7 +309,7 @@ class ExtractTiles():
         # initialize the shape name and approximate the contour
         shape = "unidentified"
         peri = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.15 * peri, True)
+        approx = cv2.approxPolyDP(c, 0.01 * peri, True)
 
         # if the shape has 4 vertices, it is either a square or
         # a rectangle
@@ -460,6 +460,6 @@ class Find_objects():
         plt.show()
 
 if __name__ == "__main__":
-     im = cv2.imread('EvaluationData/frame0000.jpg')
+     im = cv2.imread('EvaluationData/02.jpg')
      tiles = ExtractTiles(im,show=True,save = True)
      a = Find_objects(tiles.tiles,show=True)
