@@ -401,16 +401,16 @@ class Find_objects():
         bestmatch_msi = np.argsort(m)
         bestmatch_ssim = np.argsort(s)
 
-        #         print "Output:"
-        #         print "The bestmatch from the MSI method"
-        #         print "1.", Image_names[bestmatch_msi[0]],m[bestmatch_msi[0]]
-        #         print "2.", Image_names[bestmatch_msi[1]],m[bestmatch_msi[1]]
-        #         print "3.", Image_names[bestmatch_msi[2]],m[bestmatch_msi[2]]
-        #         print "The bestmatch from the SSIM method"
-        #         print "1:",Image_names[bestmatch_ssim[-1]],s[bestmatch_ssim[-1]]
-        #         print "2:",Image_names[bestmatch_ssim[-2]],s[bestmatch_ssim[-2]]
-        #         print "3:",Image_names[bestmatch_ssim[-3]],s[bestmatch_ssim[-3]]
-        #         print "----------------------------------------"
+        print "Output:"
+        print "The bestmatch from the MSI method"
+        print "1.", Image_names[bestmatch_msi[0]],m[bestmatch_msi[0]]
+        print "2.", Image_names[bestmatch_msi[1]],m[bestmatch_msi[1]]
+        print "3.", Image_names[bestmatch_msi[2]],m[bestmatch_msi[2]]
+        print "The bestmatch from the SSIM method"
+        print "1:",Image_names[bestmatch_ssim[-1]],s[bestmatch_ssim[-1]]
+        print "2:",Image_names[bestmatch_ssim[-2]],s[bestmatch_ssim[-2]]
+        print "3:",Image_names[bestmatch_ssim[-3]],s[bestmatch_ssim[-3]]
+        print "----------------------------------------"
         img = cv2.resize(img,(300,300))
         images[bestmatch_msi[0]] = cv2.resize(images[bestmatch_msi[0]],(300,300))
         images[bestmatch_ssim[-1]] = cv2.resize(images[bestmatch_ssim[-1]],(300,300))
@@ -424,13 +424,16 @@ class Find_objects():
 
     def find_object_name(self):
         self.solution = []
+        self.solutionImages = []
         for i in range (self.no_of_tiles):
             tileName = self.compare_this_image_with_database(self.tiles[i])
             self.solution.append(tileName)
+            location = "DataBase/"+ tileName + ".jpg"
+            self.solutionImages.append(cv2.imread(location))
 
     def print_result(self):
         fig = plt.figure("Output")
-        fig.set_size_inches(18.5, len (self.solution)*2)
+        fig.set_size_inches(18.5, len (self.solution)*2.5)
         #lt.suptitle("MSE: %.2f, SSIM: %.2f" % (m, s))
         # show first image
         subplot_row = self.no_of_tiles  + 1
@@ -443,16 +446,23 @@ class Find_objects():
             plt.title("Input image")
             plt.axis("off")
 
+        #Show the extracted tiles
         for i in range (len (self.solution)):
-            if i%2 == 0:
-                posx = i+1
-                posy = 0
-            else:
-                posy =1
+            posx = i+1
+            posy = 0
 
             ax2 = plt.subplot2grid((subplot_row,subplot_col), (posx, posy))
             plt.imshow(self.tiles[i], cmap = plt.cm.gray)
-            plt.title("Tile" + str(i) + ":" + self.solution[i])
+            plt.title("Extracted Tile" + str(i) )
+            plt.axis("off")
+
+        #show the solution tiles
+        for i in range (len (self.tiles)):
+            posx = i+1
+            posy = 1
+            ax2 = plt.subplot2grid((subplot_row,subplot_col), (posx, posy))
+            plt.imshow(self.solutionImages[i], cmap = plt.cm.gray)
+            plt.title("Best Match:" + self.solution[i])
             plt.axis("off")
 
 
@@ -460,6 +470,6 @@ class Find_objects():
         plt.show()
 
 if __name__ == "__main__":
-     im = cv2.imread('EvaluationData/02.jpg')
+     im = cv2.imread('EvaluationData/frame0000.jpg')
      tiles = ExtractTiles(im,show=True,save = True)
-     a = Find_objects(tiles.tiles,show=True)
+     a = Find_objects(tiles.tiles, show=True)
